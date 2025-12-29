@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Vue liste -->
+    <record id="view_bareme_prime_tree" model="ir.ui.view">
+        <field name="name">bareme.prime.tree</field>
+        <field name="model">bareme.prime</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="zone_id"/>
+                <field name="type"/>
+                <field name="valeur_pourcentage"/>
+                <field name="coefficient"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Vue formulaire -->
+    <record id="view_bareme_prime_form" model="ir.ui.view">
+        <field name="name">bareme.prime.form</field>
+        <field name="model">bareme.prime</field>
+        <field name="arch" type="xml">
+<form>
+    <header>
+        <button
+            name="action_test_agents_zones"
+            type="object"
+            string="Tester Agents &amp; Zones"
+            class="btn-primary"/>
+        <button name="action_test_lavages"
+                            string="Afficher Lavages"
+                            type="object"
+                            class="btn-primary"/>
+
+        <button name="action_test_livraison_stats"
+                            string="livraison"
+                            type="object"
+                            class="btn-primary"/>
+        <button name="action_test_degradations"
+        string="Test Dégradations"
+        type="object"
+        class="oe_highlight"/>
+        <button name="action_test_maintenance_alert"
+        string="maintenance et alert"
+        type="object"
+        class="oe_highlight"/>
+        <button name="action_test_ventes_options"
+        string="option"
+        type="object"
+        class="oe_highlight"/>
+
+        <button name="action_calculate_points"
+        string="📊 Calculer Points"
+        type="object"
+        class="btn-success"/>
+        <button name="action_calculate_manual_prime"
+        string="📊 Calculer Points"
+        type="object"
+        class="btn-success"/>
+
+
+
+    </header>
+    <sheet>
+        <group>
+            <field name="name"/>
+            <field name="type"/>
+            <field name="valeur_pourcentage" invisible="type != 'pourcentage'"/>
+            <field name="coefficient" invisible="type != 'coefficient'"/>
+                            <field name="zone_id"/>
+
+        </group>
+
+
+    </sheet>
+
+            <footer>
+        <button
+            name="action_test_agents_zones"
+            type="object"
+            string="Tester Agents &amp; Zones"
+            class="btn-primary"/>
+    </footer>
+
+</form>
+        </field>
+    </record>
+
+    <!-- Action window pour barèmes -->
+    <record id="action_bareme_prime" model="ir.actions.act_window">
+        <field name="name">Barèmes de primes</field>
+        <field name="res_model">bareme.prime</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Action client pour l'interface -->
+    <record id="action_prime_interface" model="ir.actions.client">
+        <field name="name">Interface Prime</field>
+        <field name="tag">prime_interface_action</field>
+    </record>
+
+    <!-- Menu principal -->
+    <menuitem id="menu_prime_root"
+              name="Primes"
+              sequence="10"/>
+
+    <!-- Sous-menu Interface -->
+    <menuitem id="menu_prime_interface"
+              name="Interface Prime"
+              parent="menu_prime_root"
+              action="action_prime_interface"
+              sequence="10"/>
+
+    <!-- Sous-menu Barèmes -->
+    <menuitem id="menu_bareme_prime"
+              name="Barèmes de primes"
+              parent="menu_prime_root"
+              action="action_bareme_prime"
+              sequence="20"/>
+</odoo>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- ===== TREE VIEW ===== -->
+    <record id="view_ajouter_point_tree" model="ir.ui.view">
+        <field name="name">ajouter.point.tree</field>
+        <field name="model">ajouter.point</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="type_id"/>
+                <field name="user_id"/>
+                <field name="nombre"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- ===== FORM VIEW ===== -->
+    <record id="view_ajouter_point_form" model="ir.ui.view">
+        <field name="name">ajouter.point.form</field>
+        <field name="model">ajouter.point</field>
+        <field name="arch" type="xml">
+            <form string="Ajouter Point">
+                <sheet>
+                    <group>
+                        <field name="type_id"/>
+                        <field name="user_id"/>
+                        <field name="nombre"/>
+                        <field name="date"/>
+                        <field name="create_date" readonly="1"/>
+
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ===== ACTION ===== -->
+    <record id="action_ajouter_point" model="ir.actions.act_window">
+        <field name="name">Ajouter des points</field>
+        <field name="res_model">ajouter.point</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- ===== MENU ===== -->
+    <menuitem id="menu_ajouter_point"
+              name="Ajouter des points"
+              parent="menu_prime_root"
+              action="action_ajouter_point"
+              sequence="055552"/>
+
+</odoo>

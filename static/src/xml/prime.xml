@@ -1,0 +1,1054 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="prime.PrimeTemplate">
+        <div class="o_agent_interface">
+    <style>
+
+    .o_agent_interface {
+      --bg:#f5f7fb;
+      --card:#ffffff;
+      --accent:#273573;
+      --accent-2:#E92355;
+      --success:#10b981;
+      --danger:#ef4444;
+      --glass: rgba(39,53,115,0.06);
+      --excel-blue:#5b8def;
+      --border:#e5e7eb;
+    }
+
+    .o_agent_interface,
+    .o_agent_interface * {
+        box-sizing:border-box;
+        margin:0;
+        padding:0;
+        font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue', Arial, sans-serif;
+        line-height:1.5;
+    }
+
+    /* ============================================
+       CONTENEUR PRINCIPAL
+    ============================================ */
+    .o_agent_interface {
+    background: linear-gradient(180deg, var(--bg) 0%, #eef2ff 100%);
+    color: #0f172a;
+    min-height: 100%;
+    height: 100%;
+    overflow-y: auto !important;  /* ← CECI EST LA PROPRIÉTÉ QUI ACTIVE LE SCROLL */
+    position: relative;
+    width: 100%;
+}
+
+    /* ============================================
+       HEADER
+    ============================================ */
+    .o_agent_interface header{
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:16px;
+        padding:20px 28px;
+        flex-wrap:wrap;
+        background: var(--card);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+
+    .o_agent_interface .brand{
+        display:flex;
+        align-items:center;
+        gap:12px;
+    }
+
+    .o_agent_interface .logo{
+        width:46px;
+        height:46px;
+        border-radius:8px;
+        background:linear-gradient(135deg,var(--accent),var(--accent-2));
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        color:white;
+        font-weight:700;
+        font-size:20px;
+    }
+
+    .o_agent_interface .title{
+        font-size:18px;
+        font-weight:600;
+        color:var(--accent);
+    }
+
+    /* ============================================
+       LAYOUT PRINCIPAL
+    ============================================ */
+    .o_agent_interface .main-layout{
+        display:grid;
+        grid-template-columns:600px 1fr;
+        gap:25px;
+        padding:20px;
+        max-width:1350px;
+        margin:0 auto;
+    }
+
+    .o_agent_interface .sidebar-section{
+        display:flex;
+        flex-direction:column;
+        gap:16px;
+    }
+
+    /* ============================================
+       CARTES ET SECTIONS
+    ============================================ */
+    .o_agent_interface .card{
+        background:var(--card);
+        border-radius:8px;
+        padding:20px;
+        box-shadow:0 1px 3px rgba(0,0,0,0.08);
+        border:1px solid var(--border);
+    }
+
+    .o_agent_interface .section{
+        margin-bottom:16px;
+    }
+
+    .o_agent_interface .section:last-child{
+        margin-bottom:0;
+    }
+
+    .o_agent_interface label.small{
+        display:block;
+        font-size:12px;
+        color:var(--muted);
+        margin-bottom:6px;
+        font-weight:600;
+        text-transform:uppercase;
+        letter-spacing:0.5px;
+    }
+
+    .o_agent_interface select,
+    .o_agent_interface input[type=text]{
+        width:100%;
+        padding:12px;
+        border-radius:6px;
+        border:1px solid var(--border);
+        font-family:inherit;
+        font-size:14px;
+        background:var(--card);
+        transition:border-color 0.2s;
+    }
+
+    .o_agent_interface select:focus,
+    .o_agent_interface input[type=text]:focus{
+        outline:none;
+        border-color:var(--excel-blue);
+    }
+
+    /* ============================================
+       AGENT META
+    ============================================ */
+    .o_agent_interface .agent-meta{
+        display:flex;
+        gap:12px;
+        align-items:center;
+        padding:14px;
+        background:#f9fafb;
+        border-radius:8px;
+        border:1px solid var(--border);
+    }
+
+    .o_agent_interface .avatar{
+        width:56px;
+        height:56px;
+        border-radius:8px;
+        background:linear-gradient(135deg,var(--accent),var(--accent-2));
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        font-weight:700;
+        color:white;
+        font-size:24px;
+    }
+
+    /* ============================================
+       KPI ET PILLS
+    ============================================ */
+    .o_agent_interface .kpi{
+        display:flex;
+        flex-direction:column;
+        gap:8px;
+    }
+
+    .o_agent_interface .pill{
+        background:#f9fafb;
+        border-radius:6px;
+        padding:8px 14px;
+        font-size:13px;
+        border:1px solid var(--border);
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+    }
+
+    .o_agent_interface .pill strong{
+        color:var(--accent);
+        font-weight:600;
+    }
+
+    /* ============================================
+       KPI GROUP
+    ============================================ */
+    .o_agent_interface .kpi-group{
+        padding:14px;
+        border-radius:8px;
+        border:1px solid var(--border);
+    }
+
+    .o_agent_interface .kpi-group.blue{
+        background:#eff6ff;
+        border-color:#bfdbfe;
+    }
+
+    .o_agent_interface .kpi-group.green{
+        background:#f0fdf4;
+        border-color:#bbf7d0;
+    }
+
+    /* ============================================
+       PRIME BOX
+    ============================================ */
+    .o_agent_interface .prime-box{
+        padding:16px;
+        border:1px solid var(--accent);
+        border-radius:8px;
+        font-family:inherit;
+        color:var(--accent);
+        background-color:#fffff5;
+    }
+
+    .o_agent_interface .prime-row{
+        display:flex;
+        justify-content:space-between;
+        margin-bottom:12px;
+        font-size:14px;
+    }
+
+    .o_agent_interface .prime-row strong{
+        color:var(--accent-2);
+        font-weight:600;
+    }
+
+    .o_agent_interface .prime-divider{
+        border:none;
+        border-top:1px solid #cbd5e1;
+        margin:12px 0;
+    }
+
+    .o_agent_interface .prime-total{
+        display:flex;
+        justify-content:space-between;
+        font-size:16px;
+        font-weight:700;
+    }
+
+    /* ============================================
+       TABLEAU ÉQUIPE
+    ============================================ */
+    .o_agent_interface .table-container{
+        background:var(--card);
+        border-radius:8px;
+        overflow:hidden;
+        box-shadow:0 1px 3px rgba(0,0,0,0.08);
+        border:1px solid var(--border);
+    }
+
+    .o_agent_interface .table-header{
+        background:var(--card);
+        padding:12px;
+        border-bottom:3px solid var(--excel-blue);
+    }
+
+    .o_agent_interface .table-header h1{
+        font-size:22px;
+        font-weight:600;
+        color:var(--accent);
+        text-shadow:#1f2937 0px 0px 1px;
+        font-style:italic;
+    }
+
+    /* ============================================
+       LÉGENDE DES PERFORMANCES
+    ============================================ */
+    .o_agent_interface .legend{
+        background:var(--card);
+        padding:16px;
+        border-radius:8px;
+        box-shadow:0 1px 3px rgba(0,0,0,0.08);
+        border:1px solid var(--border);
+        margin-bottom:20px;
+    }
+
+    .o_agent_interface .legend h2{
+        font-size:16px;
+        font-weight:600;
+        margin-bottom:16px;
+        color:#1f2937;
+    }
+
+    .o_agent_interface .legend-items{
+        display:flex;
+        flex-wrap:wrap;
+        gap:20px;
+    }
+
+    .o_agent_interface .legend-item{
+        display:flex;
+        align-items:center;
+        gap:8px;
+    }
+
+    .o_agent_interface .legend-color{
+        width:18px;
+        height:18px;
+        border-radius:4px;
+        box-shadow:1px 1px 1px #1f2937;
+    }
+
+    .o_agent_interface .legend-color.excellent{
+        background-color:#10b981;
+    }
+
+    .o_agent_interface .legend-color.bon{
+        background-color:#5b8def;
+    }
+
+    .o_agent_interface .legend-color.moyen{
+        background-color:#f59e0b;
+    }
+
+    .o_agent_interface .legend-color.ameliorer{
+        background-color:#ef4444;
+    }
+
+    .o_agent_interface .legend-text{
+        font-size:13px;
+        color:var(--muted);
+    }
+
+    /* ============================================
+       TABLE STYLES
+    ============================================ */
+    .o_agent_interface table{
+        width:100%;
+        border-collapse:collapse;
+    }
+
+    .o_agent_interface thead{
+        background:#f9fafb;
+    }
+
+    .o_agent_interface th{
+        padding:14px 18px;
+        text-align:left;
+        font-size:12px;
+        font-weight:600;
+        text-transform:uppercase;
+        letter-spacing:0.5px;
+        border-bottom:1px solid var(--border);
+    }
+
+    .o_agent_interface tbody tr{
+        border-bottom:1px solid var(--border);
+        transition:background-color 0.2s;
+    }
+
+    .o_agent_interface tbody tr:hover{
+        background-color:#f6fff6;
+    }
+
+    .o_agent_interface tbody tr:last-child{
+        border-bottom:none;
+    }
+
+    .o_agent_interface td{
+        padding:10px 18px;
+        font-size:14px;
+        color:#1f2937;
+    }
+
+    .o_agent_interface .rank{
+        font-size:16px;
+        font-weight:700;
+        color:var(--excel-blue);
+    }
+
+    .o_agent_interface .points{
+        font-weight:600;
+        font-size:15px;
+    }
+
+    .o_agent_interface .badge{
+        display:inline-block;
+        padding:6px 16px;
+        border-radius:16px;
+        font-size:12px;
+        font-weight:600;
+        color:white;
+        box-shadow:1px 1px 1px #1f2937;
+    }
+
+    .o_agent_interface .badge.excellent{
+        background-color:#10b981;
+    }
+
+    .o_agent_interface .badge.bon{
+        background-color:#5b8def;
+    }
+
+    .o_agent_interface .badge.moyen{
+        background-color:#f59e0b;
+    }
+
+    /* ============================================
+       BOUTONS ET LIENS
+    ============================================ */
+    .o_agent_interface .btn-link{
+        background:none;
+        border:none;
+        color:var(--accent);
+        cursor:pointer;
+        padding:0;
+        text-decoration:none;
+        font:inherit;
+    }
+
+    .o_agent_interface .btn-link:hover{
+        color:var(--accent-2);
+        transition:color 0.2s;
+    }
+
+    /* ============================================
+       MODAL
+    ============================================ */
+    .o_agent_interface .modal{
+        display:none;
+        position:fixed;
+        z-index:1000;
+        left:0;
+        top:0;
+        width:100%;
+        height:100%;
+        background:rgba(0,0,0,0.5);
+        align-items:center;
+        justify-content:center;
+    }
+
+    .o_agent_interface .modal.show{
+        display:flex;
+    }
+
+    .o_agent_interface .modal-content{
+        background:white;
+        border-radius:8px;
+        padding:24px;
+        max-width:700px;
+        width:90%;
+        max-height:80vh;
+        overflow-y:auto;
+        box-shadow:0 10px 40px rgba(0,0,0,0.3);
+        border:1px solid var(--border);
+    }
+
+    .o_agent_interface .modal-header{
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        margin-bottom:20px;
+        padding-bottom:16px;
+        border-bottom:2px solid var(--border);
+    }
+
+    .o_agent_interface .modal-header h3{
+        color:var(--accent);
+        font-size:20px;
+        font-weight:600;
+    }
+
+    .o_agent_interface .close-btn{
+        background:none;
+        border:none;
+        font-size:28px;
+        cursor:pointer;
+        color:var(--muted);
+        transition:color 0.2s;
+        line-height:1;
+        padding:0;
+        width:32px;
+        height:32px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+    }
+
+    .o_agent_interface .close-btn:hover{
+        color:var(--danger);
+    }
+
+    .o_agent_interface .questionnaire-table{
+        width:100%;
+        border-collapse:collapse;
+        margin-top:16px;
+    }
+
+    .o_agent_interface .questionnaire-table thead{
+        background:#f9fafb;
+    }
+
+    .o_agent_interface .questionnaire-table th{
+        padding:12px 16px;
+        text-align:left;
+        font-size:12px;
+        font-weight:600;
+        color:var(--muted);
+        text-transform:uppercase;
+        letter-spacing:0.5px;
+        border-bottom:1px solid var(--border);
+    }
+
+    .o_agent_interface .questionnaire-table td{
+        padding:14px 16px;
+        font-size:14px;
+        color:#1f2937;
+        border-bottom:1px solid var(--border);
+    }
+
+    .o_agent_interface .questionnaire-table tbody tr:hover{
+        background-color:#f9fafb;
+    }
+
+    .o_agent_interface .questionnaire-table tbody tr:last-child td{
+        border-bottom:none;
+    }
+
+    /* ============================================
+       CELLULES CENTREES
+    ============================================ */
+    .o_agent_interface [id^="c_"]{
+        text-align:center;
+        padding:4px;
+        font-style:italic;
+        font-weight:bolder;
+        font-size:14px;
+        border-radius:45%;
+    }
+
+    /* ============================================
+       RESPONSIVE
+    ============================================ */
+    @media(max-width:1100px){
+        .o_agent_interface .main-layout{
+            grid-template-columns:1fr;
+        }
+    }
+
+    @media(max-width:768px){
+        .o_agent_interface header{
+            padding:16px 20px;
+        }
+
+        .o_agent_interface .main-layout{
+            padding:16px;
+            gap:16px;
+        }
+
+        .o_agent_interface .logo{
+            width:40px;
+            height:40px;
+            font-size:18px;
+        }
+
+        .o_agent_interface .title{
+            font-size:16px;
+        }
+
+        .o_agent_interface th,
+        .o_agent_interface td{
+            padding:12px 16px;
+            font-size:13px;
+        }
+
+        .o_agent_interface .table-header h1{
+            font-size:20px;
+        }
+
+        .o_agent_interface .legend-items{
+            gap:12px;
+        }
+    }
+    </style>
+
+    <div class="main-layout">
+        <aside class="sidebar-section">
+            <div class="card">
+                <div class="section">
+    <label class="small">Agent</label>
+    <select id="agentSelect" t-on-change="onAgentChange">
+        <t t-if="state.loading">
+            <option>Chargement...</option>
+        </t>
+        <t t-else="">
+            <t t-foreach="state.agents" t-as="agent" t-key="agent.id">
+                <option t-att-value="agent.id"
+                        t-att-selected="state.selectedAgent?.id === agent.id">
+                    <t t-esc="agent.name"/> - <t t-esc="agent.zonesText"/>
+                </option>
+            </t>
+        </t>
+    </select>
+</div>
+
+<div class="agent-meta">
+    <t t-if="state.selectedAgent">
+        <div class="avatar" t-esc="getAgentInitials(state.selectedAgent.name)"></div>
+        <div>
+            <div style="font-weight:600; font-size:15px;" t-esc="state.selectedAgent.name"></div>
+            <div style="font-size:13px; color:var(--muted);">
+                Zones: <t t-esc="state.selectedAgent.zonesText"/>
+            </div>
+        </div>
+    </t>
+    <t t-else="">
+        <div class="avatar">?</div>
+        <div>
+            <div style="font-weight:600; font-size:15px;">Aucun agent</div>
+            <div style="font-size:13px; color:var(--muted);">Sélectionnez un agent</div>
+        </div>
+    </t>
+</div>
+
+                <div class="section">
+                    <div class="kpi">
+                        <div class="pill" style="margin-top:8px; color:#ef4444;">
+                            <span>Questionnaires disciplinaire :</span>
+                            <strong id="count">2</strong>
+                        </div>
+                        <div class="pill">
+                            <button class="btn-link" onclick="openQuestionnaireModal()">
+                                📋 Questionnaires
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="questionnaireModal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>📋 Liste des Questionnaires</h3>
+                        <button class="close-btn" onclick="closeQuestionnaireModal()">;</button>
+                    </div>
+                    <table class="questionnaire-table">
+                        <thead>
+                            <tr>
+                                <th>Questionnaire</th>
+                                <th>Motif</th>
+                                <th>Année</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Évaluation Q1</td>
+                                <td>Reglement interieur non respecté</td>
+                                <td>2024</td>
+                            </tr>
+                            <tr>
+                                <td>Évaluation Q2</td>
+                                <td>Absence Non justifiée</td>
+                                <td>2025</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+
+<div class="card">
+                        <div class="kpi-group blue">
+                            <label class="small" style="margin-bottom:12px;">Évaluation - Interne -</label>
+
+                            <div class="kpi">
+                                <!-- Alertes -->
+                                <div class="pill" style="background:#fff;">
+                                    <span style="width:300px;">Traitement des alertes</span>
+                                    <span style="font-size:small;color:var(--muted);display:block;width:80%;text-align:right !important;font-size:x-small;padding-right:10px;">
+                                        ( <t t-esc="getStatDisplay('alerte').count"/> x <t t-esc="getStatDisplay('alerte').coefficient"/> ) :
+                                    </span>
+                                    <strong t-esc="getStatDisplay('alerte').points"/>
+                                </div>
+
+                                <!-- Lavage et préparation -->
+                                <div class="pill" style="background:#fff;">
+                                    <span style="width:300px;">Lavage et préparation véhicule</span>
+                                    <span style="font-size:small;color:var(--muted);display:block;width:80%;text-align:right !important;font-size:x-small;padding-right:10px;">
+                                        ( <t t-esc="getStatDisplay('lavage').count"/> x <t t-esc="getStatDisplay('lavage').coefficient"/> ) :
+                                    </span>
+                                    <strong t-esc="getStatDisplay('lavage').points"/>
+                                </div>
+
+                                <!-- Livraison Hors zone -->
+                                <div class="pill" style="background:#fff;">
+                                    <span style="width:300px;">Livraison / restitution Hors zone</span>
+                                    <span style="font-size:small;color:var(--muted);display:block;width:80%;text-align:right !important;font-size:x-small;padding-right:10px;">
+                                        ( <t t-esc="getStatDisplay('livraison_hors_zone').count"/> x <t t-esc="getStatDisplay('livraison_hors_zone').coefficient"/> ) :
+                                    </span>
+                                    <strong t-esc="getStatDisplay('livraison_hors_zone').points"/>
+                                </div>
+
+                                <!-- Livraison normale -->
+                                <div class="pill" style="background:#fff;">
+                                    <span style="width:300px;">Livraison / restitution</span>
+                                    <span style="font-size:small;color:var(--muted);display:block;width:80%;text-align:right !important;font-size:x-small;padding-right:10px;">
+                                        ( <t t-esc="getStatDisplay('livraison_normal').count"/> x <t t-esc="getStatDisplay('livraison_normal').coefficient"/> ) :
+                                    </span>
+                                    <strong t-esc="getStatDisplay('livraison_normal').points"/>
+                                </div>
+
+                                <!-- Livraison tardive -->
+                                <div class="pill" style="background:#fff;">
+                                    <span style="width:300px;">Livraison / restitution Tardive</span>
+                                    <span style="font-size:small;color:var(--muted);display:block;width:80%;text-align:right !important;font-size:x-small;padding-right:10px;">
+                                        ( <t t-esc="getStatDisplay('livraison_tardive').count"/> x <t t-esc="getStatDisplay('livraison_tardive').coefficient"/> ) :
+                                    </span>
+                                    <strong t-esc="getStatDisplay('livraison_tardive').points"/>
+                                </div>
+
+                                <!-- Maintenance -->
+                                <div class="pill" style="background:#fff;">
+                                    <span style="width:300px;">Entretien/Maintenance</span>
+                                    <span style="font-size:small;color:var(--muted);display:block;width:80%;text-align:right !important;font-size:x-small;padding-right:10px;">
+                                        ( <t t-esc="getStatDisplay('maintenance').count"/> x <t t-esc="getStatDisplay('maintenance').coefficient"/> ) :
+                                    </span>
+                                    <strong t-esc="getStatDisplay('maintenance').points"/>
+                                </div>
+
+                                <!-- TOUTES LES OPTIONS VENDUES -->
+
+                                <!-- Siège bébé -->
+                                <div class="pill" style="background:#fff;">
+                                    <span style="width:300px;">Siège bébé</span>
+                                    <span style="font-size:small;color:var(--muted);display:block;width:80%;text-align:right !important;font-size:x-small;padding-right:10px;">
+                                        ( <t t-esc="getStatDisplay('siege_bebe').count"/> x <t t-esc="getStatDisplay('siege_bebe').coefficient"/> ) :
+                                    </span>
+                                    <strong t-esc="getStatDisplay('siege_bebe').points"/>
+                                </div>
+
+                                <!-- 2ème conducteur -->
+                                <div class="pill" style="background:#fff;">
+                                    <span style="width:300px;">2ème conducteur</span>
+                                    <span style="font-size:small;color:var(--muted);display:block;width:80%;text-align:right !important;font-size:x-small;padding-right:10px;">
+                                        ( <t t-esc="getStatDisplay('conducteur').count"/> x <t t-esc="getStatDisplay('conducteur').coefficient"/> ) :
+                                    </span>
+                                    <strong t-esc="getStatDisplay('conducteur').points"/>
+                                </div>
+
+                                <!-- Carburant -->
+                                <div class="pill" style="background:#fff;">
+                                    <span style="width:300px;">Carburant</span>
+                                    <span style="font-size:small;color:var(--muted);display:block;width:80%;text-align:right !important;font-size:x-small;padding-right:10px;">
+                                        ( <t t-esc="getStatDisplay('carburant').count"/> x <t t-esc="getStatDisplay('carburant').coefficient"/> ) :
+                                    </span>
+                                    <strong t-esc="getStatDisplay('carburant').points"/>
+                                </div>
+
+                                <!-- Protection standard -->
+                                <div class="pill" style="background:#fff;">
+                                    <span style="width:300px;">Protection standard</span>
+                                    <span style="font-size:small;color:var(--muted);display:block;width:80%;text-align:right !important;font-size:x-small;padding-right:10px;">
+                                        ( <t t-esc="getStatDisplay('protection_standard').count"/> x <t t-esc="getStatDisplay('protection_standard').coefficient"/> ) :
+                                    </span>
+                                    <strong t-esc="getStatDisplay('protection_standard').points"/>
+                                </div>
+
+                                <!-- Protection maximale -->
+                                <div class="pill" style="background:#fff;">
+                                    <span style="width:300px;">Protection maximale</span>
+                                    <span style="font-size:small;color:var(--muted);display:block;width:80%;text-align:right !important;font-size:x-small;padding-right:10px;">
+                                        ( <t t-esc="getStatDisplay('protection_max').count"/> x <t t-esc="getStatDisplay('protection_max').coefficient"/> ) :
+                                    </span>
+                                    <strong t-esc="getStatDisplay('protection_max').points"/>
+                                </div>
+                                <!-- Après toutes les autres pill DIV, avant le hr.prime-divider -->
+
+<!-- Premier National - Afficher seulement si l'agent est Premier National -->
+<t t-if="getStatDisplay('premier_national').count > 0">
+    <div class="pill" style="background:#fff; border-left: 4px solid #f59e0b;">
+        <span style="width:300px;">
+            <span style="color:#f59e0b; font-weight:bold;">🏆 Premier National</span>
+        </span>
+
+        <strong style="color:#f59e0b;" t-esc="getStatDisplay('premier_national').points"/>
+    </div>
+</t>
+<!-- Premier Régional - Afficher seulement si l'agent est Premier Régional -->
+<t t-if="getStatDisplay('premier_regional').count > 0">
+    <div class="pill" style="background:#fff; border-left: 4px solid #9ca3af;">
+        <span style="width:300px;">
+            <span style="color:#6b7280; font-weight:bold;">🥈 Premier Régional</span>
+        </span>
+        <strong style="color:#6b7280;" t-esc="getStatDisplay('premier_regional').points"/>
+    </div>
+</t><!-- Premier National - N'afficher que si l'agent est Premier National -->
+<t t-if="isPremierNational()">
+    <div style="margin-top: 20px; padding: 16px; background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-radius: 8px; border: 2px solid #f59e0b; text-align: center; box-shadow: 0 4px 6px rgba(245, 158, 11, 0.3);">
+        <div style="font-size: 14px; font-weight: 600; color: #92400e; margin-bottom: 8px;">
+            🏆 PREMIER NATIONAL
+        </div>
+        <div style="font-size: 24px; font-weight: 700; color: var(--accent);">
+            <t t-esc="state.selectedAgent?.name || 'Agent inconnu'"/>
+        </div>
+    </div>
+</t><!-- Badge Premier Régional (ARGENT) - Seulement si PAS Premier National -->
+<t t-if="isPremierRegional()">
+    <div style="margin-top: 20px; padding: 16px; background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%); border-radius: 8px; border: 2px solid #9ca3af; text-align: center; box-shadow: 0 4px 6px rgba(156, 163, 175, 0.3);">
+        <div style="font-size: 14px; font-weight: 600; color: #374151; margin-bottom: 8px;">
+            🥈 PREMIER RÉGIONAL
+        </div>
+        <div style="font-size: 24px; font-weight: 700; color: var(--accent);">
+            <t t-esc="state.selectedAgent?.name || 'Agent inconnu'"/>
+        </div>
+    </div>
+</t>                            </div>
+<hr class="prime-divider"/>
+
+                            <!-- Section Prime -->
+<!-- Section Prime -->
+                            <!-- Version Simple -->
+                            <hr class="prime-divider"/>
+
+                                                        <div class="prime-box">
+                                <div class="prime-row">
+                                    <span>Total des points récoltés :</span>
+                                    <strong><t t-esc="state.agentStats?.totalPoints || 0"/> points</strong>
+                                </div>
+                                <div class="prime-row">
+                                    <span>Votre prime :</span>
+                                    <strong><t t-esc="state.agentStats?.totalPoints || 0"/> points × 100 DA</strong>
+                                </div>
+                                <hr class="prime-divider"/>
+                                <div class="prime-total">
+                                    <span>Prime Services :</span>
+                                    <strong><t t-esc="getTotalPrime()"/> DA</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>        </aside>
+
+        <div>
+<div class="card">
+    <div class="kpi-group green">
+        <label class="small" style="margin-bottom:12px;">Performance Avis</label>
+        <div class="kpi">
+            <!-- Affichage DYNAMIQUE de toutes les stats manuelles -->
+            <t t-if="state.agentStats?.manualStats and Object.keys(state.agentStats.manualStats).length > 0">
+                <t t-foreach="Object.entries(state.agentStats.manualStats)" t-as="entry" t-key="entry[0]">
+                    <div class="pill" style="background:#fff;">
+                        <span style="width:300px;">
+                            <t t-esc="entry[1].bareme_name"/>
+                        </span>
+                        <span style="font-size:small;color:var(--muted);display:block;width:80%;text-align:right !important;font-size:x-small;padding-right:10px;">
+                            ( <t t-esc="entry[1].count"/> x <t t-esc="entry[1].coefficient"/> ) :
+                        </span>
+                        <strong t-esc="entry[1].points"/>
+                    </div>
+                </t>
+            </t>
+
+            <!-- Message si aucune donnée -->
+            <t t-if="!state.agentStats?.manualStats or Object.keys(state.agentStats.manualStats).length === 0">
+                <div class="pill" style="background:#fff;">
+                    <span style="width:100%; text-align:center; color:var(--muted); font-style:italic;">
+                        Aucune donnée de performance manuelle pour cet agent
+                    </span>
+                </div>
+            </t>
+        </div>
+    </div>
+</div>
+
+<hr class="prime-divider"/>
+
+<div class="card">
+    <div class="prime-box">
+        <div class="prime-total">
+            <span>Prime Spéciale
+ :</span>
+            <strong><t t-esc="getTotalManualPrime()"/> DA</strong>
+        </div>
+    </div>
+</div>
+<hr class="prime-divider"/>
+
+<div class="card">
+    <div class="prime-box" style="background-color:#f0fdf4; border-color:#10b981;">
+        <div class="prime-row">
+            <span style="font-size:15px;">Prime Services :</span>
+            <strong style="font-size:15px;"><t t-esc="getTotalPrime()"/> DA</strong>
+        </div>
+        <div class="prime-row">
+            <span style="font-size:15px;">Prime Spéciale :</span>
+            <strong style="font-size:15px;"><t t-esc="getTotalManualPrime()"/> DA</strong>
+        </div>
+        <hr class="prime-divider"/>
+        <div class="prime-total" style="font-size:18px; color:#10b981;">
+            <span>🎉 VOTRE PRIME FINALE :</span>
+            <strong><t t-esc="getTotalFinalPrime()"/> DA</strong>
+        </div>
+    </div>
+</div>
+            <hr class="prime-divider"/>
+
+<div class="legend">
+    <h2>Légende des performances</h2>
+    <div class="legend-items">
+        <div class="legend-item">
+            <div class="legend-color excellent"></div>
+            <span class="legend-text">Excellent (≥ 40000 DA)</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color bon"></div>
+            <span class="legend-text">Bon (≥ 30000 DA)</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color moyen"></div>
+            <span class="legend-text">Moyen (≥ 20000 DA)</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color ameliorer"></div>
+            <span class="legend-text">À améliorer (&lt; 20000 DA)</span>
+        </div>
+    </div>
+</div>
+
+<div class="table-container">
+    <t t-if="state.loading">
+        <div style="padding: 40px; text-align: center; color: var(--muted);">
+            Chargement du classement...
+        </div>
+    </t>
+
+    <t t-elif="state.ranking and state.ranking.length > 0">
+        <table>
+            <thead>
+                <tr>
+                    <th>Rang</th>
+                    <th>Nom</th>
+                    <th>Points</th>
+                    <th>Prime Finale</th>
+                    <th>Performance</th>
+                </tr>
+            </thead>
+            <tbody>
+                <t t-foreach="state.ranking" t-as="agent" t-key="agent.id">
+                    <tr t-att-class="state.selectedAgent?.id === agent.id ? 'highlighted' : ''">
+                        <td class="rank"><t t-esc="agent_index + 1"/></td>
+                        <td><t t-esc="agent.name"/></td>
+                        <td class="points"><t t-esc="agent.totalPoints"/></td>
+                        <td class="points"><t t-esc="agent.primeFinale.toLocaleString('fr-DZ')"/> DA</td>
+                        <td>
+                            <span t-att-class="'badge ' + agent.performance.class">
+                                <t t-esc="agent.performance.label"/>
+                            </span>
+                        </td>
+                    </tr>
+                </t>
+            </tbody>
+        </table>
+
+    </t>
+
+    <t t-else="">
+        <div style="padding: 40px; text-align: center; color: var(--muted);">
+            Aucun agent trouvé
+        </div>
+    </t>
+</div>
+
+
+        </div>
+    </div>
+
+    <script>
+    // Fonctions pour la modal
+    function openQuestionnaireModal() {
+        document.getElementById('questionnaireModal').classList.add('show');
+    }
+
+    function closeQuestionnaireModal() {
+        document.getElementById('questionnaireModal').classList.remove('show');
+    }
+
+    // Fermer la modal en cliquant en dehors
+    window.onclick = function(event) {
+        const modal = document.getElementById('questionnaireModal');
+        if (event.target === modal) {
+            closeQuestionnaireModal();
+        }
+    }
+
+    // Fonction pour calculer le total des points
+    function calculateTotalPoints() {
+        const pointFields = [
+            'c_alertes_val',
+            'c_preparation_val',
+            'c_hors_zone_val',
+            'c_mission_val',
+            'c_opd_val',
+            'c_opr_val',
+            'c_transfert_val',
+            'c_entretien_val',
+            'c_tardive_val',
+            'c_Opton_val',
+            'c_Férié_val',
+            'c_location_val',
+            'c_location-ville_val',
+            'c_accompagnement_val',
+            'c_avisg_val',
+            'c_avist_val',
+            'c_avistr_val',
+            'c_classement_val',
+            'c_classement2_val',
+            'c_avg'
+        ];
+
+        let total = 0;
+        pointFields.forEach(fieldId => {
+            const element = document.getElementById(fieldId);
+            if (element) {
+                const value = parseInt(element.textContent) || 0;
+                total += value;
+            }
+        });
+
+        return total;
+    }
+
+    // Fonction pour mettre à jour l'affichage de la prime
+    function updatePrimeDisplay() {
+        const totalPoints = calculateTotalPoints();
+        const primePerPoint = 100; // 100 DA par point
+        const totalPrime = totalPoints * primePerPoint;
+
+        // Mise à jour du total des points
+        document.getElementById('totalPoints').textContent = totalPoints + ' points';
+
+        // Mise à jour du calcul de la prime
+        document.getElementById('primeCalcul').textContent = totalPoints + ' points × ' + primePerPoint + ' DA';
+
+        // Mise à jour du montant total de la prime
+        document.getElementById('totalPrime').textContent = totalPrime.toLocaleString('fr-DZ') + ' DA';
+    }
+
+    // Calculer et afficher au chargement de la page
+    window.addEventListener('DOMContentLoaded', updatePrimeDisplay);
+    </script>
+</div>
+</t>
+</templates>

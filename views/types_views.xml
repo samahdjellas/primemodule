@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- ===== TREE VIEW ===== -->
+    <record id="view_my_type_tree" model="ir.ui.view">
+        <field name="name">my.type.tree</field>
+        <field name="model">my.type</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- ===== FORM VIEW ===== -->
+    <record id="view_my_type_form" model="ir.ui.view">
+        <field name="name">my.type.form</field>
+        <field name="model">my.type</field>
+        <field name="arch" type="xml">
+            <form string="Type">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ===== ACTION ===== -->
+    <record id="action_my_type" model="ir.actions.act_window">
+        <field name="name">Types</field>
+        <field name="res_model">my.type</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- ===== MENU ===== -->
+    <menuitem id="menu_my_type_root"
+              name="Paramétrage"
+              sequence="50"/>
+
+    <menuitem id="menu_my_type"
+              name="Types"
+              parent="menu_prime_root"
+              action="action_my_type"
+              sequence="10"/>
+
+</odoo>
