@@ -13,13 +13,17 @@ class AjouterPoint(models.Model):
     user_id = fields.Many2one(
         'res.users',
         string='Utilisateur',
-        required=True
+        required=True,
+        domain=lambda self: [
+            ('groups_id', 'in', self.env.ref('access_rights_groups.group_agent').id)
+        ]
     )
 
     nombre = fields.Float(
         string='Nombre',
         required=True
     )
+
     date = fields.Date(
         string="Date",
         default=fields.Date.context_today,

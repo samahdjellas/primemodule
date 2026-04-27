@@ -9,6 +9,7 @@
         'views/bareme_prime_views.xml',
         'views/types_views.xml',
         'views/ajouter_point_views.xml',
+        'views/bloquer_agent_views.xml',
     ],
     'assets': {
         'web.assets_backend': [

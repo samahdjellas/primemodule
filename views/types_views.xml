@@ -43,6 +43,7 @@
               name="Types"
               parent="menu_prime_root"
               action="action_my_type"
-              sequence="10"/>
+              groups="access_rights_groups.group_admin"/>
+    sequence="10"/>
 
 </odoo>

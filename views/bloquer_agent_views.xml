@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <!-- ═══════════════════════════════════════════
+             FORM VIEW
+        ═══════════════════════════════════════════ -->
+        <record id="view_bloquer_agent_form" model="ir.ui.view">
+            <field name="name">bloquer.agent.form</field>
+            <field name="model">bloquer.agent</field>
+            <field name="arch" type="xml">
+                <form string="Blocage Agent">
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="user_id" placeholder="Sélectionner un agent..."/>
+                            </h1>
+                        </div>
+
+                        <group>
+                            <group string="Période de blocage">
+                                <field name="date_debut"/>
+                                <field name="date_fin"/>
+                            </group>
+                            <group string="Statut">
+                                <field name="active" widget="toggle_button"/>
+                            </group>
+                        </group>
+
+                        <group string="Motif">
+                            <field name="motif" nolabel="1" placeholder="Raison du blocage..."/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- ═══════════════════════════════════════════
+             TREE VIEW
+        ═══════════════════════════════════════════ -->
+        <record id="view_bloquer_agent_tree" model="ir.ui.view">
+            <field name="name">bloquer.agent.tree</field>
+            <field name="model">bloquer.agent</field>
+            <field name="arch" type="xml">
+                <tree string="Agents Bloqués"
+                      decoration-danger="active == True"
+                      decoration-muted="active == False">
+                    <field name="user_id"/>
+                    <field name="date_debut"/>
+                    <field name="date_fin"/>
+                    <field name="motif"/>
+                    <field name="active" widget="toggle_button"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- ═══════════════════════════════════════════
+             SEARCH VIEW
+        ═══════════════════════════════════════════ -->
+        <record id="view_bloquer_agent_search" model="ir.ui.view">
+            <field name="name">bloquer.agent.search</field>
+            <field name="model">bloquer.agent</field>
+            <field name="arch" type="xml">
+                <search string="Rechercher un blocage">
+                    <field name="user_id" string="Agent"/>
+                    <field name="date_debut"/>
+                    <field name="date_fin"/>
+                    <filter string="Actifs" name="actifs" domain="[('active', '=', True)]"/>
+                    <filter string="Inactifs" name="inactifs" domain="[('active', '=', False)]"/>
+                    <separator/>
+                    <filter string="Ce mois" name="ce_mois"
+                            domain="[('date_debut', '&lt;=', context_today().strftime('%Y-%m-%d')),
+                                     ('date_fin',   '&gt;=', context_today().strftime('%Y-%m-%d'))]"/>
+                    <group expand="0" string="Grouper par">
+                        <filter string="Agent" name="group_agent" context="{'group_by': 'user_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- ═══════════════════════════════════════════
+             ACTION
+        ═══════════════════════════════════════════ -->
+        <record id="action_bloquer_agent" model="ir.actions.act_window">
+            <field name="name">Agents Bloqués</field>
+            <field name="res_model">bloquer.agent</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_bloquer_agent_search"/>
+            <field name="context">{'search_default_actifs': 1}</field>
+        </record>
+
+        <!-- ═══════════════════════════════════════════
+             MENU (à adapter selon ta structure de menus)
+        ═══════════════════════════════════════════ -->
+        <menuitem
+            id="menu_bloquer_agent"
+            name="Agents Bloqués"
+            action="action_bloquer_agent"
+            groups="access_rights_groups.group_admin,access_rights_groups.group_ceo"
+            parent="menu_prime_root"
+            sequence="50"/>
+
+    </data>
+</odoo>

@@ -587,24 +587,91 @@
 
     <div class="main-layout">
         <aside class="sidebar-section">
-            <div class="card">
-                <div class="section">
-    <label class="small">Agent</label>
-    <select id="agentSelect" t-on-change="onAgentChange">
-        <t t-if="state.loading">
-            <option>Chargement...</option>
+<!-- ========== HEADER : FILTRE ANNÉE / MOIS + ACTUALISER ========== -->
+<div style="display: flex; align-items: center; gap: 15px;">
+
+    <!-- Groupe sélecteurs + bouton -->
+    <div style="display: flex; align-items: center; gap: 8px;">
+
+        <!-- SÉLECTEUR ANNÉE -->
+<!-- SÉLECTEUR ANNÉE — CORRIGÉ -->
+<select class="form-select form-select-sm" style="width: 120px;" t-on-change="onYearChange">
+    <option value="">-- Toutes années --</option>
+    <t t-foreach="state.years" t-as="yr" t-key="yr">
+        <option t-att-value="yr" t-att-selected="state.selectedYear === yr">
+            <t t-esc="yr"/>
+        </option>
+    </t>
+</select>
+
+<!-- SÉLECTEUR MOIS — CORRIGÉ -->
+<select class="form-select form-select-sm" style="width: 140px;" t-on-change="onMonthChange">
+    <option value="">-- Tous les mois --</option>
+    <t t-foreach="state.months" t-as="mo" t-key="mo.id">
+        <option t-att-value="mo.id" t-att-selected="state.selectedMonth === mo.id">
+            <t t-esc="mo.name"/>
+        </option>
+    </t>
+</select>    <button
+        class="btn btn-sm btn-primary"
+        t-on-click="reloadAllData"
+        style="padding: 8px 12px;"
+        title="Actualiser"
+    >
+        <i class="fa fa-sync me-1"></i>
+        Actualiser
+    </button>
+    </div>
+
+    <!-- Affichage période -->
+    <div style="font-size: 14px; color: var(--muted);">
+        <t t-if="state.selectedMonth and state.selectedYear">
+            Période : <strong><t t-esc="state.periodDisplay"/></strong>
         </t>
         <t t-else="">
-            <t t-foreach="state.agents" t-as="agent" t-key="agent.id">
-                <option t-att-value="agent.id"
-                        t-att-selected="state.selectedAgent?.id === agent.id">
-                    <t t-esc="agent.name"/> - <t t-esc="agent.zonesText"/>
-                </option>
-            </t>
+            Toutes les données
         </t>
-    </select>
+    </div>
+
 </div>
 
+            <div class="card">
+<div class="section">
+    <label class="small">Agent</label>
+
+    <!-- SI l'utilisateur est un agent : affichage fixe, pas de select -->
+    <t t-if="state.isCurrentUserAgent">
+        <div style="
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: #f9fafb;
+            font-size: 14px;
+            color: #1f2937;
+            font-weight: 600;
+        ">
+            <i class="fa fa-lock" style="color: var(--accent); margin-right: 8px;"/>
+            <t t-esc="state.selectedAgent?.name || 'Chargement...'"/>
+        </div>
+    </t>
+
+    <!-- SINON : liste déroulante normale -->
+    <t t-else="">
+        <select id="agentSelect" t-on-change="onAgentChange">
+            <t t-if="state.loading">
+                <option>Chargement...</option>
+            </t>
+            <t t-else="">
+                <t t-foreach="state.agents" t-as="agent" t-key="agent.id">
+                    <option t-att-value="agent.id"
+                            t-att-selected="state.selectedAgent?.id === agent.id">
+                        <t t-esc="agent.name"/> - <t t-esc="agent.zonesText"/>
+                    </option>
+                </t>
+            </t>
+        </select>
+    </t>
+</div>
 <div class="agent-meta">
     <t t-if="state.selectedAgent">
         <div class="avatar" t-esc="getAgentInitials(state.selectedAgent.name)"></div>
@@ -624,229 +691,449 @@
     </t>
 </div>
 
-                <div class="section">
-                    <div class="kpi">
-                        <div class="pill" style="margin-top:8px; color:#ef4444;">
-                            <span>Questionnaires disciplinaire :</span>
-                            <strong id="count">2</strong>
-                        </div>
-                        <div class="pill">
-                            <button class="btn-link" onclick="openQuestionnaireModal()">
-                                📋 Questionnaires
-                            </button>
-                        </div>
-                    </div>
-                </div>
             </div>
 
-            <div id="questionnaireModal" class="modal">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h3>📋 Liste des Questionnaires</h3>
-                        <button class="close-btn" onclick="closeQuestionnaireModal()">;</button>
-                    </div>
-                    <table class="questionnaire-table">
-                        <thead>
-                            <tr>
-                                <th>Questionnaire</th>
-                                <th>Motif</th>
-                                <th>Année</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Évaluation Q1</td>
-                                <td>Reglement interieur non respecté</td>
-                                <td>2024</td>
-                            </tr>
-                            <tr>
-                                <td>Évaluation Q2</td>
-                                <td>Absence Non justifiée</td>
-                                <td>2025</td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                </div>
-            </div>
 
 <div class="card">
-                        <div class="kpi-group blue">
-                            <label class="small" style="margin-bottom:12px;">Évaluation - Interne -</label>
+<div class="kpi-group blue">
+    <label class="small" style="margin-bottom:12px;">Évaluation - Interne -</label>
 
-                            <div class="kpi">
-                                <!-- Alertes -->
-                                <div class="pill" style="background:#fff;">
-                                    <span style="width:300px;">Traitement des alertes</span>
-                                    <span style="font-size:small;color:var(--muted);display:block;width:80%;text-align:right !important;font-size:x-small;padding-right:10px;">
-                                        ( <t t-esc="getStatDisplay('alerte').count"/> x <t t-esc="getStatDisplay('alerte').coefficient"/> ) :
-                                    </span>
-                                    <strong t-esc="getStatDisplay('alerte').points"/>
-                                </div>
+    <div class="kpi">
+        <!-- Alertes -->
+        <div class="pill" style="background:#fff;">
+            <span style="width:300px;">Traitement des alertes</span>
+            <span style="font-size:small;color:var(--muted);display:block;width:80%;text-align:right !important;font-size:x-small;padding-right:10px;">
+                ( <t t-esc="getStatDisplay('alerte').count"/> x
+                <t t-esc="getStatDisplay('alerte').coefficientDisplay"/> ) :
+            </span>
+            <strong>
+                <t t-if="getStatDisplay('alerte').type === 'pourcentage'">
+<t t-esc="Math.ceil(getStatDisplay('alerte').prime_da)"/>
+                </t>
+                <t t-else="">
+                    <t t-esc="getStatDisplay('alerte').points"/>
+                </t>
+            </strong>
+        </div>
 
-                                <!-- Lavage et préparation -->
-                                <div class="pill" style="background:#fff;">
-                                    <span style="width:300px;">Lavage et préparation véhicule</span>
-                                    <span style="font-size:small;color:var(--muted);display:block;width:80%;text-align:right !important;font-size:x-small;padding-right:10px;">
-                                        ( <t t-esc="getStatDisplay('lavage').count"/> x <t t-esc="getStatDisplay('lavage').coefficient"/> ) :
-                                    </span>
-                                    <strong t-esc="getStatDisplay('lavage').points"/>
-                                </div>
+        <!-- Lavage et préparation -->
+        <div class="pill" style="background:#fff;">
+            <span style="width:300px;">Lavage et préparation véhicule</span>
+            <span style="font-size:small;color:var(--muted);display:block;width:80%;text-align:right !important;font-size:x-small;padding-right:10px;">
+                ( <t t-esc="getStatDisplay('lavage').count"/> x
+                <t t-esc="getStatDisplay('lavage').coefficientDisplay"/> ) :
+            </span>
+            <strong>
+                <t t-if="getStatDisplay('lavage').type === 'pourcentage'">
+<t t-esc="Math.ceil(getStatDisplay('lavage').prime_da)"/>
+                </t>
+                <t t-else="">
+                    <t t-esc="getStatDisplay('lavage').points"/>
+                </t>
+            </strong>
+        </div>
 
-                                <!-- Livraison Hors zone -->
-                                <div class="pill" style="background:#fff;">
-                                    <span style="width:300px;">Livraison / restitution Hors zone</span>
-                                    <span style="font-size:small;color:var(--muted);display:block;width:80%;text-align:right !important;font-size:x-small;padding-right:10px;">
-                                        ( <t t-esc="getStatDisplay('livraison_hors_zone').count"/> x <t t-esc="getStatDisplay('livraison_hors_zone').coefficient"/> ) :
-                                    </span>
-                                    <strong t-esc="getStatDisplay('livraison_hors_zone').points"/>
-                                </div>
+        <!-- Optionnel : Afficher le détail des dégradations -->
 
-                                <!-- Livraison normale -->
-                                <div class="pill" style="background:#fff;">
-                                    <span style="width:300px;">Livraison / restitution</span>
-                                    <span style="font-size:small;color:var(--muted);display:block;width:80%;text-align:right !important;font-size:x-small;padding-right:10px;">
-                                        ( <t t-esc="getStatDisplay('livraison_normal').count"/> x <t t-esc="getStatDisplay('livraison_normal').coefficient"/> ) :
-                                    </span>
-                                    <strong t-esc="getStatDisplay('livraison_normal').points"/>
-                                </div>
+        <!-- Livraison Hors zone -->
+        <div class="pill" style="background:#fff;">
+            <span style="width:300px;">Livraison / restitution Hors zone</span>
+            <span style="font-size:small;color:var(--muted);display:block;width:80%;text-align:right !important;font-size:x-small;padding-right:10px;">
+                ( <t t-esc="getStatDisplay('livraison_hors_zone').count"/> x
+                <t t-esc="getStatDisplay('livraison_hors_zone').coefficientDisplay"/> ) :
+            </span>
+            <strong>
+                <t t-if="getStatDisplay('livraison_hors_zone').type === 'pourcentage'">
+<t t-esc="Math.ceil(getStatDisplay('livraison_hors_zone').prime_da)"/>
+                </t>
+                <t t-else="">
+                    <t t-esc="getStatDisplay('livraison_hors_zone').points"/>
+                </t>
+            </strong>
+        </div>
+        <!-- Livraison Hors Ville -->
+<div class="pill" style="background:#fff;">
+    <span style="width:300px;">Livraison / restitution Hors ville</span>
+    <span style="font-size:small;color:var(--muted);display:block;width:80%;text-align:right !important;font-size:x-small;padding-right:10px;">
+        ( <t t-esc="getStatDisplay('livraison_hors_ville').count"/> x
+        <t t-esc="getStatDisplay('livraison_hors_ville').coefficientDisplay"/> ) :
+    </span>
+    <strong>
+        <t t-if="getStatDisplay('livraison_hors_ville').type === 'pourcentage'">
+<t t-esc="Math.ceil(getStatDisplay('livraison_hors_ville').prime_da)"/>
+        </t>
+        <t t-else="">
+            <t t-esc="getStatDisplay('livraison_hors_ville').points"/>
+        </t>
+    </strong>
+</div>
 
-                                <!-- Livraison tardive -->
-                                <div class="pill" style="background:#fff;">
-                                    <span style="width:300px;">Livraison / restitution Tardive</span>
-                                    <span style="font-size:small;color:var(--muted);display:block;width:80%;text-align:right !important;font-size:x-small;padding-right:10px;">
-                                        ( <t t-esc="getStatDisplay('livraison_tardive').count"/> x <t t-esc="getStatDisplay('livraison_tardive').coefficient"/> ) :
-                                    </span>
-                                    <strong t-esc="getStatDisplay('livraison_tardive').points"/>
-                                </div>
+        <!-- Livraison normale -->
+        <div class="pill" style="background:#fff;">
+            <span style="width:300px;">Livraison / restitution</span>
+            <span style="font-size:small;color:var(--muted);display:block;width:80%;text-align:right !important;font-size:x-small;padding-right:10px;">
+                ( <t t-esc="getStatDisplay('livraison_normal').count"/> x
+                <t t-esc="getStatDisplay('livraison_normal').coefficientDisplay"/> ) :
+            </span>
+            <strong>
+                <t t-if="getStatDisplay('livraison_normal').type === 'pourcentage'">
+<t t-esc="Math.ceil(getStatDisplay('livraison_normal').prime_da)"/>
+                </t>
+                <t t-else="">
+                    <t t-esc="getStatDisplay('livraison_normal').points"/>
+                </t>
+            </strong>
+        </div>
 
-                                <!-- Maintenance -->
-                                <div class="pill" style="background:#fff;">
-                                    <span style="width:300px;">Entretien/Maintenance</span>
-                                    <span style="font-size:small;color:var(--muted);display:block;width:80%;text-align:right !important;font-size:x-small;padding-right:10px;">
-                                        ( <t t-esc="getStatDisplay('maintenance').count"/> x <t t-esc="getStatDisplay('maintenance').coefficient"/> ) :
-                                    </span>
-                                    <strong t-esc="getStatDisplay('maintenance').points"/>
-                                </div>
+        <!-- Livraison tardive -->
+        <div class="pill" style="background:#fff;">
+            <span style="width:300px;">Livraison / restitution Tardive</span>
+            <span style="font-size:small;color:var(--muted);display:block;width:80%;text-align:right !important;font-size:x-small;padding-right:10px;">
+                ( <t t-esc="getStatDisplay('livraison_tardive').count"/> x
+                <t t-esc="getStatDisplay('livraison_tardive').coefficientDisplay"/> ) :
+            </span>
+            <strong>
+                <t t-if="getStatDisplay('livraison_tardive').type === 'pourcentage'">
+<t t-esc="Math.ceil(getStatDisplay('livraison_tardive').prime_da)"/>
+                </t>
+                <t t-else="">
+                    <t t-esc="getStatDisplay('livraison_tardive').points"/>
+                </t>
+            </strong>
+        </div>
 
-                                <!-- TOUTES LES OPTIONS VENDUES -->
+        <!-- Livraison Hors zone + Tardive -->
+<div class="pill" style="background:#fff;">
+    <span style="width:300px;">hors zone / tardive</span>
+    <span style="font-size:small;color:var(--muted);display:block;width:80%;text-align:right !important;font-size:x-small;padding-right:10px;">
+        ( <t t-esc="getStatDisplay('livraison_hors_zone_tardive').count"/> x
+        <t t-esc="getStatDisplay('livraison_hors_zone_tardive').coefficientDisplay"/> ) :
+    </span>
+    <strong>
+        <t t-if="getStatDisplay('livraison_hors_zone_tardive').type === 'pourcentage'">
+<t t-esc="Math.ceil(getStatDisplay('livraison_hors_zone_tardive').prime_da)"/>
+        </t>
+        <t t-else="">
+            <t t-esc="getStatDisplay('livraison_hors_zone_tardive').points"/>
+        </t>
+    </strong>
+</div>
 
-                                <!-- Siège bébé -->
-                                <div class="pill" style="background:#fff;">
-                                    <span style="width:300px;">Siège bébé</span>
-                                    <span style="font-size:small;color:var(--muted);display:block;width:80%;text-align:right !important;font-size:x-small;padding-right:10px;">
-                                        ( <t t-esc="getStatDisplay('siege_bebe').count"/> x <t t-esc="getStatDisplay('siege_bebe').coefficient"/> ) :
-                                    </span>
-                                    <strong t-esc="getStatDisplay('siege_bebe').points"/>
-                                </div>
+        <!-- Maintenance -->
+        <div class="pill" style="background:#fff;">
+            <span style="width:300px;">Entretien/Maintenance</span>
+            <span style="font-size:small;color:var(--muted);display:block;width:80%;text-align:right !important;font-size:x-small;padding-right:10px;">
+                ( <t t-esc="getStatDisplay('maintenance').count"/> x
+                <t t-esc="getStatDisplay('maintenance').coefficientDisplay"/> ) :
+            </span>
+            <strong>
+                <t t-if="getStatDisplay('maintenance').type === 'pourcentage'">
+<t t-esc="Math.ceil(getStatDisplay('maintenance').prime_da)"/>
+                </t>
+                <t t-else="">
+                    <t t-esc="getStatDisplay('maintenance').points"/>
+                </t>
+            </strong>
+        </div>
 
-                                <!-- 2ème conducteur -->
-                                <div class="pill" style="background:#fff;">
-                                    <span style="width:300px;">2ème conducteur</span>
-                                    <span style="font-size:small;color:var(--muted);display:block;width:80%;text-align:right !important;font-size:x-small;padding-right:10px;">
-                                        ( <t t-esc="getStatDisplay('conducteur').count"/> x <t t-esc="getStatDisplay('conducteur').coefficient"/> ) :
-                                    </span>
-                                    <strong t-esc="getStatDisplay('conducteur').points"/>
-                                </div>
+        <!-- Siège bébé -->
+<!-- APRÈS -->
+<div class="pill" style="background:#fff;">
+    <span style="width:300px;">Siège bébé</span>
 
-                                <!-- Carburant -->
-                                <div class="pill" style="background:#fff;">
-                                    <span style="width:300px;">Carburant</span>
-                                    <span style="font-size:small;color:var(--muted);display:block;width:80%;text-align:right !important;font-size:x-small;padding-right:10px;">
-                                        ( <t t-esc="getStatDisplay('carburant').count"/> x <t t-esc="getStatDisplay('carburant').coefficient"/> ) :
-                                    </span>
-                                    <strong t-esc="getStatDisplay('carburant').points"/>
-                                </div>
+    <span style="font-size:small;color:var(--muted);display:block;width:80%;text-align:right !important;font-size:x-small;padding-right:10px;">
 
-                                <!-- Protection standard -->
-                                <div class="pill" style="background:#fff;">
-                                    <span style="width:300px;">Protection standard</span>
-                                    <span style="font-size:small;color:var(--muted);display:block;width:80%;text-align:right !important;font-size:x-small;padding-right:10px;">
-                                        ( <t t-esc="getStatDisplay('protection_standard').count"/> x <t t-esc="getStatDisplay('protection_standard').coefficient"/> ) :
-                                    </span>
-                                    <strong t-esc="getStatDisplay('protection_standard').points"/>
-                                </div>
+        <!-- CAS MONTANT -->
+        <t t-if="usesTotalAmount('siege_bebe')">
+            <t t-esc="getStatDisplay('siege_bebe').count"/> vente(s) |
+            <t t-esc="getStatDisplay('siege_bebe').total_amount_dzd ? getStatDisplay('siege_bebe').total_amount_dzd.toLocaleString('fr-DZ') : '0'"/>
+            ×
+            <t t-esc="getStatDisplay('siege_bebe').coefficientDisplay"/>
+            :
+        </t>
 
-                                <!-- Protection maximale -->
-                                <div class="pill" style="background:#fff;">
-                                    <span style="width:300px;">Protection maximale</span>
-                                    <span style="font-size:small;color:var(--muted);display:block;width:80%;text-align:right !important;font-size:x-small;padding-right:10px;">
-                                        ( <t t-esc="getStatDisplay('protection_max').count"/> x <t t-esc="getStatDisplay('protection_max').coefficient"/> ) :
-                                    </span>
-                                    <strong t-esc="getStatDisplay('protection_max').points"/>
-                                </div>
-                                <!-- Après toutes les autres pill DIV, avant le hr.prime-divider -->
+        <!-- CAS COUNT -->
+        <t t-else="">
+            (
+            <t t-esc="getStatDisplay('siege_bebe').count"/>
+            ×
+            <t t-esc="getStatDisplay('siege_bebe').coefficientDisplay"/>
+            ) :
+        </t>
 
-<!-- Premier National - Afficher seulement si l'agent est Premier National -->
-<t t-if="getStatDisplay('premier_national').count > 0">
-    <div class="pill" style="background:#fff; border-left: 4px solid #f59e0b;">
-        <span style="width:300px;">
-            <span style="color:#f59e0b; font-weight:bold;">🏆 Premier National</span>
-        </span>
+    </span>
 
-        <strong style="color:#f59e0b;" t-esc="getStatDisplay('premier_national').points"/>
-    </div>
+    <strong>
+        <t t-if="getStatDisplay('siege_bebe').type === 'pourcentage'">
+<t t-esc="Math.ceil(getStatDisplay('siege_bebe').prime_da)"/>
+        </t>
+        <t t-else="">
+            <t t-esc="getStatDisplay('siege_bebe').points"/>
+        </t>
+    </strong>
+</div>        <!-- 2ème conducteur -->
+<div class="pill" style="background:#fff;">
+            <span style="width:300px;">2ème conducteur</span>
+            <span style="font-size:small;color:var(--muted);display:block;width:80%;text-align:right !important;font-size:x-small;padding-right:10px;">
+<t t-if="usesTotalAmount('conducteur')">
+    <t t-esc="getStatDisplay('conducteur').count"/> vente(s) |
+    <t t-esc="getStatDisplay('conducteur').total_amount_dzd ? getStatDisplay('conducteur').total_amount_dzd.toLocaleString('fr-DZ') : '0'"/>
+    × <t t-esc="getStatDisplay('conducteur').coefficientDisplay"/> :
+</t>    <t t-else="">
+        ( <t t-esc="getStatDisplay('conducteur').count"/> x
+        <t t-esc="getStatDisplay('conducteur').coefficientDisplay"/> ) :
+    </t>
+            </span>
+            <strong>
+                <t t-if="getStatDisplay('conducteur').type === 'pourcentage'">
+<t t-esc="Math.ceil(getStatDisplay('conducteur').prime_da)"/>
+                </t>
+                <t t-else="">
+                    <t t-esc="getStatDisplay('conducteur').points"/>
+                </t>
+            </strong>
+        </div>
+
+        <!-- Carburant -->
+<div class="pill" style="background:#fff;">
+    <span style="width:300px;">Carburant</span>
+    <span style="font-size:small;color:var(--muted);display:block;width:80%;text-align:right !important;font-size:x-small;padding-right:10px;">
+        <t t-if="getStatDisplay('carburant').type === 'pourcentage' and getStatDisplay('carburant').total_amount > 0">
+            ( <t t-esc="getStatDisplay('carburant').total_amount.toLocaleString('fr-DZ')"/> DA
+            × <t t-esc="getStatDisplay('carburant').coefficientDisplay"/> ) :
+        </t>
+        <t t-else="">
+            ( <t t-esc="getStatDisplay('carburant').count"/> x
+            <t t-esc="getStatDisplay('carburant').coefficientDisplay"/> ) :
+        </t>
+    </span>
+    <strong>
+        <t t-if="getStatDisplay('carburant').type === 'pourcentage'">
+<t t-esc="Math.ceil(getStatDisplay('carburant').prime_da)"/>
+        </t>
+        <t t-else="">
+            <t t-esc="getStatDisplay('carburant').points"/>
+        </t>
+    </strong>
+</div>        <!-- Protection standard -->
+<div class="pill" style="background:#fff;">
+            <span style="width:300px;">Protection standard</span>
+            <span style="font-size:small;color:var(--muted);display:block;width:80%;text-align:right !important;font-size:x-small;padding-right:10px;">
+<t t-if="usesTotalAmount('protection_standard')">
+    <t t-esc="getStatDisplay('protection_standard').count"/> vente(s) |
+    <t t-esc="getStatDisplay('protection_standard').total_amount_dzd ? getStatDisplay('protection_standard').total_amount_dzd.toLocaleString('fr-DZ') : '0'"/>
+    × <t t-esc="getStatDisplay('protection_standard').coefficientDisplay"/> :
+</t>    <t t-else="">
+        ( <t t-esc="getStatDisplay('protection_standard').count"/> x
+        <t t-esc="getStatDisplay('protection_standard').coefficientDisplay"/> ) :
+    </t>
+            </span>
+            <strong>
+                <t t-if="getStatDisplay('protection_standard').type === 'pourcentage'">
+<t t-esc="Math.ceil(getStatDisplay('protection_standard').prime_da)"/>
+                </t>
+                <t t-else="">
+                    <t t-esc="getStatDisplay('protection_standard').points"/>
+                </t>
+            </strong>
+        </div>
+        <!-- Protection maximale -->
+<div class="pill" style="background:#fff;">
+            <span style="width:300px;">Protection maximale</span>
+            <span style="font-size:small;color:var(--muted);display:block;width:80%;text-align:right !important;font-size:x-small;padding-right:10px;">
+<t t-if="usesTotalAmount('protection_max')">
+    <t t-esc="getStatDisplay('protection_max').count"/> vente(s) |
+    <t t-esc="getStatDisplay('protection_max').total_amount_dzd ? getStatDisplay('protection_max').total_amount_dzd.toLocaleString('fr-DZ') : '0'"/>
+    × <t t-esc="getStatDisplay('protection_max').coefficientDisplay"/> :
+</t>    <t t-else="">
+        ( <t t-esc="getStatDisplay('protection_max').count"/> x
+        <t t-esc="getStatDisplay('protection_max').coefficientDisplay"/> ) :
+    </t>
+            </span>
+            <strong>
+                <t t-if="getStatDisplay('protection_max').type === 'pourcentage'">
+<t t-esc="Math.ceil(getStatDisplay('protection_max').prime_da)"/>
+                </t>
+                <t t-else="">
+                    <t t-esc="getStatDisplay('protection_max').points"/>
+                </t>
+            </strong>
+        </div>
+        <!-- Kilométrage illimité -->
+<!-- Kilométrage illimité -->
+<!-- Kilométrage illimité -->
+<div class="pill" style="background:#fff;">
+    <span style="width:300px;">Kilométrage illimité</span>
+<span style="font-size:small;color:var(--muted);display:block;width:80%;text-align:right !important;font-size:x-small;padding-right:10px;">
+    <t t-if="usesTotalAmount('klm_illimite')">
+    <t t-esc="getStatDisplay('klm_illimite').count"/> vente(s) |
+    <t t-esc="getStatDisplay('klm_illimite').total_amount_dzd ? getStatDisplay('klm_illimite').total_amount_dzd.toLocaleString('fr-DZ') : '0'"/>
+    × <t t-esc="getStatDisplay('klm_illimite').coefficientDisplay"/> :
 </t>
-<!-- Premier Régional - Afficher seulement si l'agent est Premier Régional -->
-<t t-if="getStatDisplay('premier_regional').count > 0">
-    <div class="pill" style="background:#fff; border-left: 4px solid #9ca3af;">
-        <span style="width:300px;">
-            <span style="color:#6b7280; font-weight:bold;">🥈 Premier Régional</span>
-        </span>
-        <strong style="color:#6b7280;" t-esc="getStatDisplay('premier_regional').points"/>
-    </div>
-</t><!-- Premier National - N'afficher que si l'agent est Premier National -->
-<t t-if="isPremierNational()">
-    <div style="margin-top: 20px; padding: 16px; background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-radius: 8px; border: 2px solid #f59e0b; text-align: center; box-shadow: 0 4px 6px rgba(245, 158, 11, 0.3);">
-        <div style="font-size: 14px; font-weight: 600; color: #92400e; margin-bottom: 8px;">
-            🏆 PREMIER NATIONAL
-        </div>
-        <div style="font-size: 24px; font-weight: 700; color: var(--accent);">
-            <t t-esc="state.selectedAgent?.name || 'Agent inconnu'"/>
-        </div>
-    </div>
-</t><!-- Badge Premier Régional (ARGENT) - Seulement si PAS Premier National -->
-<t t-if="isPremierRegional()">
-    <div style="margin-top: 20px; padding: 16px; background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%); border-radius: 8px; border: 2px solid #9ca3af; text-align: center; box-shadow: 0 4px 6px rgba(156, 163, 175, 0.3);">
-        <div style="font-size: 14px; font-weight: 600; color: #374151; margin-bottom: 8px;">
-            🥈 PREMIER RÉGIONAL
-        </div>
-        <div style="font-size: 24px; font-weight: 700; color: var(--accent);">
-            <t t-esc="state.selectedAgent?.name || 'Agent inconnu'"/>
-        </div>
-    </div>
-</t>                            </div>
-<hr class="prime-divider"/>
+    <t t-else="">
+        ( <t t-esc="getStatDisplay('klm_illimite').count"/> x
+          <t t-esc="getStatDisplay('klm_illimite').coefficientDisplay"/> ) :
+    </t>
+</span>    <strong>
+        <t t-if="getStatDisplay('klm_illimite').type === 'pourcentage'">
+<t t-esc="Math.ceil(getStatDisplay('klm_illimite').prime_da)"/>
+        </t>
+        <t t-else="">
+            <t t-esc="getStatDisplay('klm_illimite').points"/>
+        </t>
+    </strong>
+</div>
+        <!-- Dégradation -->
+<div class="pill"
+     style="background:#fff;
+            border-left:4px solid #dc2626;">
 
-                            <!-- Section Prime -->
-<!-- Section Prime -->
-                            <!-- Version Simple -->
-                            <hr class="prime-divider"/>
+    <span style="width:300px; color:#dc2626; font-weight:bold;">
+        ⚠️ Encaissement dégradation
+    </span>
 
-                                                        <div class="prime-box">
-                                <div class="prime-row">
-                                    <span>Total des points récoltés :</span>
-                                    <strong><t t-esc="state.agentStats?.totalPoints || 0"/> points</strong>
-                                </div>
-                                <div class="prime-row">
-                                    <span>Votre prime :</span>
-                                    <strong><t t-esc="state.agentStats?.totalPoints || 0"/> points × 100 DA</strong>
-                                </div>
-                                <hr class="prime-divider"/>
-                                <div class="prime-total">
-                                    <span>Prime Services :</span>
-                                    <strong><t t-esc="getTotalPrime()"/> DA</strong>
-                                </div>
-                            </div>
-                        </div>
-                    </div>        </aside>
+    <span style="font-size:small;
+                 color:var(--muted);
+                 display:block;
+                 width:80%;
+                 text-align:right !important;
+                 font-size:x-small;
+                 padding-right:10px;">
+
+        <!-- POURCENTAGE -->
+        <t t-if="getDegradationDisplay().type === 'pourcentage'">
+            <t t-esc="getDegradationDisplay().total_amount ? getDegradationDisplay().total_amount.toLocaleString('fr-DZ') : '0'"/>
+            ×
+            <t t-esc="getDegradationDisplay().coefficientDisplay"/>
+            :
+        </t>
+
+        <!-- AUTRE CAS -->
+        <t t-else="">
+            (
+            <t t-esc="getDegradationDisplay().count"/>
+            ×
+            <t t-esc="getDegradationDisplay().coefficientDisplay"/>
+            ) :
+        </t>
+
+    </span>
+
+    <strong style="color:#dc2626;">
+        <t t-if="getDegradationDisplay().type === 'pourcentage'">
+<t t-esc="Math.ceil(getDegradationDisplay().prime_da)"/>
+        </t>
+        <t t-else="">
+            <t t-esc="getDegradationDisplay().points"/>
+        </t>
+    </strong>
+
+</div>
+        <!-- Premier National -->
+        <t t-if="getStatDisplay('premier_national').count > 0">
+            <div class="pill" style="background:#fff; border-left: 4px solid #f59e0b;">
+                <span style="width:300px;">
+                    <span style="color:#f59e0b; font-weight:bold;">🏆 Premier National</span>
+                </span>
+                <span style="font-size:small;color:var(--muted);display:block;width:80%;text-align:right !important;font-size:x-small;padding-right:10px;">
+                    ( <t t-esc="getStatDisplay('premier_national').count"/> x
+                    <t t-esc="getStatDisplay('premier_national').coefficientDisplay"/> ) :
+                </span>
+                <strong style="color:#f59e0b;">
+                    <t t-if="getStatDisplay('premier_national').type === 'pourcentage'">
+<t t-esc="Math.ceil(getStatDisplay('premier_national').prime_da)"/>
+                    </t>
+                    <t t-else="">
+                        <t t-esc="getStatDisplay('premier_national').points"/>
+                    </t>
+                </strong>
+            </div>
+        </t>
+
+        <!-- Premier Régional -->
+<t t-if="getStatDisplay('premier_regional').count > 0 and !isPremierNational()">            <div class="pill" style="background:#fff; border-left: 4px solid #9ca3af;">
+                <span style="width:300px;">
+                    <span style="color:#6b7280; font-weight:bold;">🥈 Premier Régional</span>
+                </span>
+                <span style="font-size:small;color:var(--muted);display:block;width:80%;text-align:right !important;font-size:x-small;padding-right:10px;">
+                    ( <t t-esc="getStatDisplay('premier_regional').count"/> x
+                    <t t-esc="getStatDisplay('premier_regional').coefficientDisplay"/> ) :
+                </span>
+                <strong style="color:#6b7280;">
+                    <t t-if="getStatDisplay('premier_regional').type === 'pourcentage'">
+<t t-esc="Math.ceil(getStatDisplay('premier_regional').prime_da)"/>
+                    </t>
+                    <t t-else="">
+                        <t t-esc="getStatDisplay('premier_regional').points"/>
+                    </t>
+                </strong>
+            </div>
+        </t>
+
+        <!-- Badge Premier National -->
+        <t t-if="isPremierNational()">
+            <div style="margin-top: 20px; padding: 16px; background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-radius: 8px; border: 2px solid #f59e0b; text-align: center; box-shadow: 0 4px 6px rgba(245, 158, 11, 0.3);">
+                <div style="font-size: 14px; font-weight: 600; color: #92400e; margin-bottom: 8px;">
+                    🏆 PREMIER NATIONAL
+                </div>
+                <div style="font-size: 24px; font-weight: 700; color: var(--accent);">
+                    <t t-esc="state.selectedAgent?.name || 'Agent inconnu'"/>
+                </div>
+            </div>
+        </t>
+
+        <!-- Badge Premier Régional -->
+        <t t-if="isPremierRegional() and !isPremierNational()">
+            <div style="margin-top: 20px; padding: 16px; background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%); border-radius: 8px; border: 2px solid #9ca3af; text-align: center; box-shadow: 0 4px 6px rgba(156, 163, 175, 0.3);">
+                <div style="font-size: 14px; font-weight: 600; color: #374151; margin-bottom: 8px;">
+                    🥈 PREMIER RÉGIONAL
+                </div>
+                <div style="font-size: 24px; font-weight: 700; color: var(--accent);">
+                    <t t-esc="state.selectedAgent?.name || 'Agent inconnu'"/>
+                </div>
+            </div>
+        </t>
+    </div>
+
+    <hr class="prime-divider"/>
+
+    <!-- Section Prime détaillée -->
+    <div class="prime-box">
+        <div class="prime-row">
+            <span>Total des points récoltés :</span>
+            <strong><t t-esc="getTotalPoints()"/> points</strong>
+        </div>
+
+        <hr class="prime-divider" style="margin: 8px 0;"/>
+
+        <div class="prime-row" style="font-size: 13px; color: #5b8def;">
+            <span>Prime de points :</span>
+            <strong><t t-esc="getTotalPoints()"/> points × 100 DA = <t t-esc="getPrimePoints()"/> DA</strong>
+        </div>
+
+        <div class="prime-row" style="font-size: 13px; color: #10b981;">
+            <span>Prime de pourcentage :</span>
+            <strong><t t-esc="Math.ceil(getPrimePourcentage())"/> DA</strong>
+        </div>
+
+        <hr class="prime-divider"/>
+
+        <div class="prime-total">
+            <span>Prime Services :</span>
+            <strong><t t-esc="Math.ceil(getPrimeServices())"/> DA</strong>
+        </div>
+    </div>
+</div>
+</div>        </aside>
 
         <div>
 <div class="card">
     <div class="kpi-group green">
-        <label class="small" style="margin-bottom:12px;">Performance Avis</label>
+
+        <label class="small" style="margin-bottom:12px;">Prime Divers</label>
+
         <div class="kpi">
-            <!-- Affichage DYNAMIQUE de toutes les stats manuelles -->
+            <!-- Affichage DYNAMIQUE -->
             <t t-if="state.agentStats?.manualStats and Object.keys(state.agentStats.manualStats).length > 0">
                 <t t-foreach="Object.entries(state.agentStats.manualStats)" t-as="entry" t-key="entry[0]">
                     <div class="pill" style="background:#fff;">
@@ -856,12 +1143,12 @@
                         <span style="font-size:small;color:var(--muted);display:block;width:80%;text-align:right !important;font-size:x-small;padding-right:10px;">
                             ( <t t-esc="entry[1].count"/> x <t t-esc="entry[1].coefficient"/> ) :
                         </span>
-                        <strong t-esc="entry[1].points"/>
+                        <strong><t t-esc="entry[1].points"/> </strong>
                     </div>
                 </t>
             </t>
 
-            <!-- Message si aucune donnée -->
+            <!-- Si vide -->
             <t t-if="!state.agentStats?.manualStats or Object.keys(state.agentStats.manualStats).length === 0">
                 <div class="pill" style="background:#fff;">
                     <span style="width:100%; text-align:center; color:var(--muted); font-style:italic;">
@@ -870,59 +1157,77 @@
                 </div>
             </t>
         </div>
+
+        <!-- ✅ TOTAL DANS LE CADRE VERT -->
+        <hr class="prime-divider"/>
+
+        <div class="prime-box">
+            <div class="prime-row">
+                <span>Total des points récoltés :</span>
+                <strong><t t-esc="getTotalManualPoints()"/> points</strong>
+            </div>
+
+            <hr class="prime-divider" style="margin: 8px 0;"/>
+
+            <div class="prime-row" style="font-size: 13px; color: #5b8def;">
+                <span>Prime Divers :</span>
+                <strong>
+                    <t t-esc="getTotalManualPoints()"/> points × 100 DA =
+                    <t t-esc="getTotalManualPrime()"/> DA
+                </strong>
+            </div>
+
+            <hr class="prime-divider"/>
+
+            <div class="prime-total">
+                <span>Prime Divers :</span>
+                <strong><t t-esc="getTotalManualPrime()"/> DA</strong>
+            </div>
+        </div>
+
     </div>
 </div>
-
 <hr class="prime-divider"/>
 
-<div class="card">
-    <div class="prime-box">
-        <div class="prime-total">
-            <span>Prime Spéciale
- :</span>
-            <strong><t t-esc="getTotalManualPrime()"/> DA</strong>
-        </div>
-    </div>
-</div>
 <hr class="prime-divider"/>
 
 <div class="card">
     <div class="prime-box" style="background-color:#f0fdf4; border-color:#10b981;">
         <div class="prime-row">
             <span style="font-size:15px;">Prime Services :</span>
-            <strong style="font-size:15px;"><t t-esc="getTotalPrime()"/> DA</strong>
+            <strong style="font-size:15px;"><t t-esc="getPrimeServices()"/> DA</strong>
         </div>
         <div class="prime-row">
-            <span style="font-size:15px;">Prime Spéciale :</span>
+            <span style="font-size:15px;">Prime Divers:</span>
             <strong style="font-size:15px;"><t t-esc="getTotalManualPrime()"/> DA</strong>
         </div>
         <hr class="prime-divider"/>
         <div class="prime-total" style="font-size:18px; color:#10b981;">
             <span>🎉 VOTRE PRIME FINALE :</span>
-            <strong><t t-esc="getTotalFinalPrime()"/> DA</strong>
+            <strong><t t-esc="Math.ceil(getTotalFinalPrime()).toLocaleString('fr-DZ')"/> DA
+</strong>
         </div>
     </div>
-</div>
-            <hr class="prime-divider"/>
+</div>            <hr class="prime-divider"/>
 
 <div class="legend">
     <h2>Légende des performances</h2>
     <div class="legend-items">
         <div class="legend-item">
             <div class="legend-color excellent"></div>
-            <span class="legend-text">Excellent (≥ 40000 DA)</span>
+            <span class="legend-text">Excellent (≥ 30000 DA)</span>
         </div>
         <div class="legend-item">
             <div class="legend-color bon"></div>
-            <span class="legend-text">Bon (≥ 30000 DA)</span>
+            <span class="legend-text">Bon (≥ 20000 DA)</span>
         </div>
         <div class="legend-item">
             <div class="legend-color moyen"></div>
-            <span class="legend-text">Moyen (≥ 20000 DA)</span>
+            <span class="legend-text">Moyen (≥ 10000 DA)</span>
         </div>
         <div class="legend-item">
             <div class="legend-color ameliorer"></div>
-            <span class="legend-text">À améliorer (&lt; 20000 DA)</span>
+            <span class="legend-text">À améliorer (&lt; 10000 DA)</span>
         </div>
     </div>
 </div>
@@ -935,34 +1240,40 @@
     </t>
 
     <t t-elif="state.ranking and state.ranking.length > 0">
-        <table>
-            <thead>
-                <tr>
-                    <th>Rang</th>
-                    <th>Nom</th>
-                    <th>Points</th>
-                    <th>Prime Finale</th>
-                    <th>Performance</th>
-                </tr>
-            </thead>
-            <tbody>
-                <t t-foreach="state.ranking" t-as="agent" t-key="agent.id">
-                    <tr t-att-class="state.selectedAgent?.id === agent.id ? 'highlighted' : ''">
-                        <td class="rank"><t t-esc="agent_index + 1"/></td>
-                        <td><t t-esc="agent.name"/></td>
-                        <td class="points"><t t-esc="agent.totalPoints"/></td>
-                        <td class="points"><t t-esc="agent.primeFinale.toLocaleString('fr-DZ')"/> DA</td>
-                        <td>
-                            <span t-att-class="'badge ' + agent.performance.class">
-                                <t t-esc="agent.performance.label"/>
-                            </span>
-                        </td>
-                    </tr>
-                </t>
-            </tbody>
-        </table>
-
-    </t>
+<table>
+    <thead>
+        <tr>
+            <th>Rang</th>
+            <th>Nom</th>
+            <th>Prime Finale</th>
+            <th>Performance</th>
+        </tr>
+    </thead>
+    <tbody>
+        <t t-foreach="state.ranking" t-as="agent" t-key="agent.id">
+            <tr t-att-style="state.isCurrentUserAgent and state.currentUserId === agent.id ?
+                             'background:#eff6ff; font-weight:bold; border-left: 3px solid var(--accent);' : ''">
+                <td class="rank"><t t-esc="agent_index + 1"/></td>
+                <td>
+                    <t t-esc="agent.name"/>
+                    <t t-if="state.isCurrentUserAgent and state.currentUserId === agent.id">
+                        <span style="margin-left:8px; font-size:11px; color:var(--accent); font-weight:600;">
+                            ← Vous
+                        </span>
+                    </t>
+                </td>
+                <td class="points">
+                    <strong><t t-esc="agent.primeFinale.toLocaleString('fr-DZ')"/> DA</strong>
+                </td>
+                <td>
+                    <span t-att-class="'badge ' + agent.performance.class">
+                        <t t-esc="agent.performance.label"/>
+                    </span>
+                </td>
+            </tr>
+        </t>
+    </tbody>
+</table>    </t>
 
     <t t-else="">
         <div style="padding: 40px; text-align: center; color: var(--muted);">
